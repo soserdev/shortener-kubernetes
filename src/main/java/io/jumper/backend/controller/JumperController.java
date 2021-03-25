@@ -1,19 +1,40 @@
 package io.jumper.backend.controller;
 
-import io.jumper.backend.model.ShortUrl;
+import io.jumper.backend.dto.UrlDto;
+import io.jumper.backend.service.UrlService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController()
 public class JumperController {
 
-    @GetMapping("/{shortUrl:[\\d]+}")
-    public ResponseEntity<ShortUrl> get(@PathVariable("shortUrl") String shortUrlPath) {
-        var body = ShortUrl.builder().shortUrl("" + shortUrlPath).destinationUrl("https://www.heise.de").build();
-        return new ResponseEntity<ShortUrl>(body, HttpStatus.OK);
+    @Autowired
+    private UrlService urlService;
+
+    // curl localhost:8080
+    @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
+    public ResponseEntity<UrlDto> get(@PathVariable("shortUrl") String shortUrlPath) {
+        var originalUrl = urlService.getUrl(shortUrlPath);
+        var urlDto = UrlDto.builder()
+                .shortUrl(shortUrlPath)
+                .url(originalUrl)
+                .build();
+        return new ResponseEntity<UrlDto>(urlDto, HttpStatus.OK);
+    }
+
+    // curl -v -H'Content-Type: application/json' -d'{"url": "http://www.swr3.de"}' http://localhost:8080/
+    @PostMapping("/")
+    public ResponseEntity<UrlDto> add(@RequestBody UrlDto urlDto) {
+        var originalUrl = urlDto.getUrl();
+        var savedUrl = urlService.createUrl(originalUrl);
+
+        var body = UrlDto.builder()
+                .shortUrl(savedUrl)
+                .url(originalUrl)
+                .build();
+        return new ResponseEntity<UrlDto>(body, HttpStatus.OK);
     }
 
 }

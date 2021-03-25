@@ -1,17 +1,20 @@
 package io.jumper.backend.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
+@Document(collection = "urls")
 public class ShortUrl {
 
+    @Id
+    private String id;
     private String shortUrl;
-    private String destinationUrl;
+    private String originalUrl;
 
 }
