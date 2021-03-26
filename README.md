@@ -36,3 +36,10 @@ Get the original url for the short url.
 ```bash
 curl localhost:8080/aHR0cD
 ```
+
+## ConfigurationProperties
+
+```java
+@Value("${jumper.test}")
+private String test;
+```

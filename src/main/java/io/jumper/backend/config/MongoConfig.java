@@ -4,29 +4,27 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
+@ConfigurationProperties(prefix = "io.jumper.backend.mongodb", ignoreUnknownFields = true)
+@Setter
 public class MongoConfig {
+
+    private String host;
 
     @Bean
     public MongoClient mongo() {
-        ConnectionString connectionString = new ConnectionString("mongodb://localhost:27017/");
+        ConnectionString connectionString = new ConnectionString(host);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
         return MongoClients.create(mongoClientSettings);
     }
-
-/*
-    public @Bean MongoClientFactoryBean mongo() {
-        MongoClientFactoryBean mongo = new MongoClientFactoryBean();
-        mongo.setHost("localhost");
-        return mongo;
-    }
-*/
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
