@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 public class MongoConfig {
 
     private String host;
+    private String database;
 
     @Bean
     public MongoClient mongo() {
@@ -28,7 +29,7 @@ public class MongoConfig {
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
-        return new MongoTemplate(mongo(), "jumper");
+        return new MongoTemplate(mongo(), database);
     }
 }
 
