@@ -1,4 +1,10 @@
-# Jumper-Kubernetes
+# Jumper-Api
+
+Start mongodb using docker.
+
+```bash
+docker run -d -p 27017:27017 -v ~/tmp/mongodb/data:/data/db mongo
+```
 
 Create a short url.
 
@@ -24,9 +30,16 @@ Create a short url.
 {"url":"http://www.google.com","shortUrl":"aHR0cD"}*
 ```
 
+
 Get the original url for the short url.
 
 ```bash
 curl localhost:8080/aHR0cD
 ```
 
+## ConfigurationProperties
+
+```java
+@Value("${jumper.test}")
+private String test;
+```
