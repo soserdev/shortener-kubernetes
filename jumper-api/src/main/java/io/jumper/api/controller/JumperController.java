@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController()
 public class JumperController {
 
@@ -35,6 +37,11 @@ public class JumperController {
                 .url(originalUrl)
                 .build();
         return new ResponseEntity<UrlDto>(body, HttpStatus.OK);
+    }
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "Hello Ping";
     }
 
 }
