@@ -115,8 +115,20 @@ p {
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
     padding: 0.7rem 1.5rem;
-    min-width: 67%;
+    width: 67%;
+    overflow: hidden;
+    white-space:nowrap;
 }
+.link-original-url:after {
+    content: "";
+    width: 30%;
+    height: 100%;
+    position: absolute;
+    left: 37%;
+    top: 0rem;
+    background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,1.0));
+}
+
 .link-short-url {
     background: linear-gradient(to right bottom, rgba(133,133,133, 0.2), rgba(122,122,122, 0.1));
     border-top-right-radius: 15px;
