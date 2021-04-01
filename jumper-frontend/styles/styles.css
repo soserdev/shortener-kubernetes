@@ -10,22 +10,21 @@
   
 body {
     color: #ffffff;
+    background: linear-gradient(to right bottom,  rgba(79, 170, 249) 0%, rgba(95, 222, 245) 52%, rgba(75, 222, 221) 100%);
+    background-position: initial initial;
+    background-repeat: initial initial;
     font-family: 'Poppins', sans-serif;
     font-size: 1.6rem;
 }
 
 main {
-    background: linear-gradient(to right top,  rgba(79, 170, 249) 0%, rgba(95, 222, 245) 52%, rgba(85, 250, 220) 100%);
-    background-position: initial initial;
-    background-repeat: initial initial;
     min-height: 100vh;
-    max-height: 100vh;
+    max-height: inherit;
 }
 
 .header {
     color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 2rem 0;
-    padding: 5rem 0 1.6rem 0;
+    padding: 5rem 0 3rem 0;
 }
 
 .header-content {
@@ -78,6 +77,7 @@ p {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 .glass {
@@ -86,11 +86,49 @@ p {
     backdrop-filter: blur(0.3rem);
     height: auto;
     width: 40rem;
+    padding: 2rem;
+    margin: 1rem 0rem;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
 }
 
+.links {
+    margin: 0 0 1rem 0rem;
+}
+.link {
+    color: rgb(161, 173, 187);
+    background: linear-gradient(to right bottom, rgba(255,255,255, 0.7), rgba(255,255,255, 1.0));
+    border-radius: 15px;
+    backdrop-filter: blur(0.3rem);
+    height: auto;
+    min-height: 1.2rem;
+    margin: 1rem 0;
+    width: 100%;
+    z-index: 3;
+    font-size: 0.9rem;
+    font-weight: 300;
+    box-shadow: 6px 6px 10px rgba(122, 122, 122, 0.2);
+    display: flex;
+}
+.link-original-url {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding: 0.7rem 1.5rem;
+    min-width: 67%;
+}
+.link-short-url {
+    background: linear-gradient(to right bottom, rgba(133,133,133, 0.2), rgba(122,122,122, 0.1));
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    padding: 0.7rem 1.5rem;
+    width:33%
+}
+
+
+
 .circle {
-    background: linear-gradient(to right bottom, rgba(255,255,255, 0.9), rgba(255,255,255, 0.3));
+    background: linear-gradient(to right bottom, rgba(255,255,255, 1.0), rgba(255,255,255, 0.1));
     border-radius: 50%;
     height: 35rem;
     width: 35rem;
@@ -106,33 +144,32 @@ p {
 }
 
 .shorten {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 0 0 1rem 0rem;
 }
+
+.shorten-label {
+    color: rgba(38, 132, 214, 0.5);
+    display: flex;
+    justify-content: left;
+    font-size: 1.0rem;
+    font-weight: 400;
+}
+
 .shorten-terms {
     display: flex;
     justify-content: center;
     font-size: 0.7rem;
     font-weight: 150;
-    padding: 1.2rem;
+    margin: 0.5rem 0;
 }
 
-.input-group {
+.shorten-input-group {
     display: flex;
     margin: 0.7rem 0;
     justify-content: center;
 }
 
-.input-error {
-    display: flex;
-    color: #fb6161;
-    justify-content: center;
-    font-size: 1.7rem;
-    font-weight: 200;
-    margin-bottom: 1.5rem;
-}
-
-.url-input {
+.shorten-url-input {
     border: 1px solid rgba(255, 255, 255, 0.7);
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
@@ -141,11 +178,11 @@ p {
     font-weight: 200;
     display: block;
     min-height: 1.2rem;
-    padding: 0 1.5rem;
+    padding: 0.2rem 1.5rem;
     width: 90%;
 }
 
-.url-button {
+.shorten-url-button {
     color: white;
     background: linear-gradient(to right bottom, rgba(79, 170, 249, 0.2), rgba(255,255,255, 0.3));
     border: 1px solid rgba(255, 255, 255, 0.7);
@@ -160,12 +197,13 @@ p {
     width: 10%;
 }
 
-.shorten-label {
-    color: rgba(38, 132, 214, 0.5);
+.input-error {
     display: flex;
-    justify-content: left;
-    font-size: 1.0rem;
-    font-weight: 400;
+    color: #fb6161;
+    justify-content: center;
+    font-size: 1.7rem;
+    font-weight: 200;
+    margin-bottom: 1.5rem;
 }
 
 .content {
@@ -213,7 +251,7 @@ p {
     margin-bottom: 5rem;
 }
 
-/* Colors created using https://color.adobe.com/de/mythemes */
+/* Colors created usinghttps://color.adobe.com/de/mythemes */
 
 /* Color Theme Swatches in Hex */
 .Glassmorphism-Blue-1-hex { color: #4FAAF9; }
