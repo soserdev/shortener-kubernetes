@@ -16,7 +16,7 @@ public class JumperController {
     private UrlService urlService;
 
     // curl localhost:8080
-    @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
+    @GetMapping("shorturl/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<UrlDto> get(@PathVariable("shortUrl") String shortUrlPath) {
         var originalUrl = urlService.getUrl(shortUrlPath);
         var urlDto = UrlDto.builder()
@@ -27,7 +27,7 @@ public class JumperController {
     }
 
     // curl -v -H'Content-Type: application/json' -d'{"url": "http://www.swr3.de"}' http://localhost:8080/
-    @PostMapping("/")
+    @PostMapping("shorturl")
     public ResponseEntity<UrlDto> add(@RequestBody UrlDto urlDto) {
         var originalUrl = urlDto.getUrl();
         var savedUrl = urlService.createUrl(originalUrl);
