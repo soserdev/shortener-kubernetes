@@ -1,9 +1,14 @@
 document.querySelector('#shorten-form').addEventListener('submit', function(e) {
     e.preventDefault()
     const originalUrl = e.target.elements.originalUrl.value;
+    if (originalUrl === "") {
+        return
+    }
     console.log(e.target.elements.originalUrl.value)
     e.target.elements.originalUrl.value = ''
 
+    const h3Element = document.getElementById("shortened-urls");
+    h3Element.style.display = "block";
 
     const spanOriginalUrlElement = document.createElement("span");
     spanOriginalUrlElement.setAttribute("class", "link-original-url");
@@ -31,6 +36,15 @@ document.querySelector('#shorten-form').addEventListener('submit', function(e) {
 
     const links = document.querySelector("#links");
     links.prepend(newDiv)
+    console.log("#childnodes: " + links.childElementCount)
+    if (links.childElementCount > 3) {
+        const lastElement = links.lastElementChild;
+        links.removeChild(lastElement);
+    }
+    
     feather.replace();
     console.log('Appended new child div')
 })
+
+const h3Element = document.getElementById("shortened-urls");
+h3Element.style.display = "none";

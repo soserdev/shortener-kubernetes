@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@200;400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
     <script defer src="/scripts/index.js"></script>
-    
     <title>Jumper</title>
 </head>
 <body>
@@ -22,18 +21,21 @@
         <div class="container">
             <div class="glass">
                 <div class="shorten">
-                    <label class="shorten-label">Enter a long URL to make a Jumper</label>
+                    <label class="shorten-label">Enter a Long Url to generate a Short Url</label>
                     <form id="shorten-form" action="/" method="post">
                         <div class="shorten-input-group">
                             <input type="url" class="shorten-url-input" placeholder="Shorten your url" id="oringinalUrl" name="originalUrl" value=""/><button class="shorten-url-button"><i data-feather="external-link" class="feather-12rem"></i></button></p>
                         </div>
                     </form>
                 </div>
-                <h3>Your shortened Urls</h2>
+                <h3 id="shortened-urls">Your shortened Urls</h2>
                 <div id="links" class="links">
-                    <div class="link"><span class="link-original-url">https://stackoverflow.com/questions/22808040/fading-out-text-on-overflow-with-css-if-the-text-is-bigger-than-allowed</span><span class="link-short-url">jumbr.io/aH6nlf</span><button class="link-copy-button"><i data-feather="copy" class="feather-12rem"></i></button></div>
-                    <div class="link"><span class="link-original-url">https://stackoverflow.com/questions/22808040/fading-out-text-on-overflow-with-css-if-the-text-is-bigger-than-allowed</span><span class="link-short-url">jumbr.io/aH6nlf</span><button class="link-copy-button"><i data-feather="copy" class="feather-12rem"></i></button></div>
-
+                    <!--<div class="link">
+                            <span class="link-original-url">https://stackoverflow.com/questions/22808040/fading-out-text-on-overflow-with-css-if-the-text-is-bigger-than-allowed</span>
+                            <span class="link-short-url">jumbr.io/aH6nlf</span>
+                            <button class="link-copy-button"><i data-feather="copy" class="feather-12rem"></i></button>
+                        </div>
+                     -->
                 </div>
                 <div class="shorten-terms"><span>By using our service you accept the Terms and Privacy.</span></div>
             </div>
