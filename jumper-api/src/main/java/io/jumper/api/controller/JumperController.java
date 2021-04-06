@@ -27,6 +27,7 @@ public class JumperController {
     }
 
     // curl -v -H'Content-Type: application/json' -d'{"url": "http://www.swr3.de"}' http://localhost:8080/
+    @CrossOrigin
     @PostMapping("shorturl")
     public ResponseEntity<UrlDto> add(@RequestBody UrlDto urlDto) {
         var originalUrl = urlDto.getUrl();

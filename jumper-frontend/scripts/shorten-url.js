@@ -4,7 +4,7 @@ const createShortUrl = async (url) => {
         originalUrl: url
     }
     console.log(`Hello: ${JSON.stringify(data)}`);
-    const response = await fetch('http://localhost/api/shorturl', {
+    const response = await fetch('http://localhost:8081/shorturl', {
         method: 'POST',
         mode: 'cors', // cors, no-cors, *cors, same-origin);
         headers: {

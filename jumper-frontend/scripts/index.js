@@ -1,12 +1,48 @@
+const createShortUrl = async (originalUrl) => {
+    const data = {
+        url: originalUrl
+    }
+    const response = await fetch('http://127.0.0.1:8081/shorturl', {
+        method: 'POST',
+        // mode: 'cors', // cors, no-cors, *cors, same-origin);
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    if (response.status !== 200) {
+        throw new Error('Unable to get message')
+    }
+    const shortUrl = await response.json();
+    return shortUrl;
+}
+
 document.querySelector('#shorten-form').addEventListener('submit', function(e) {
     e.preventDefault()
     const originalUrl = e.target.elements.originalUrl.value;
     if (originalUrl === "") {
         return
     }
-    console.log(e.target.elements.originalUrl.value)
-    e.target.elements.originalUrl.value = ''
+ 
+    let shortUrl = "";
+    createShortUrl(originalUrl).then((url) => {
+        const linkDiv = createLinkDiv(originalUrl, url.shortUrl);
+        const links = document.querySelector("#links");
+        console.log(links.childElementCount);
+        if (links.childElementCount > 2) {
+            const lastElement = links.lastElementChild;
+            links.removeChild(lastElement);
+        }
+        links.prepend(linkDiv)
+        feather.replace();
+        e.target.elements.originalUrl.value = ''
+    }).catch((err) => {
+        console.log(`Error: ${err}`);
+        return;
+    })
+})
 
+const createLinkDiv = (originalUrl, shortUrl) => {
     const h3Element = document.getElementById("shortened-urls");
     h3Element.style.display = "block";
 
@@ -17,7 +53,8 @@ document.querySelector('#shorten-form').addEventListener('submit', function(e) {
 
     const spanShortUrlElement = document.createElement("span");
     spanShortUrlElement.setAttribute("class", "link-short-url");
-    spanShortUrlElement.textContent = 'jumbr.io/bG3eNf';
+    // const hostname = window.location.hostname;
+    spanShortUrlElement.textContent = "jumper.io" + "/" + shortUrl; //'jumbr.io/bG3eNf';
 
     const italicElement = document.createElement("i");
     italicElement.setAttribute("data-feather", "copy")
@@ -27,24 +64,13 @@ document.querySelector('#shorten-form').addEventListener('submit', function(e) {
     buttonElement.setAttribute("class", "link-copy-button");
     buttonElement.appendChild(italicElement);
 
-
     const newDiv = document.createElement('div');
     newDiv.setAttribute('class', 'link');
     newDiv.appendChild(spanOriginalUrlElement);
     newDiv.appendChild(spanShortUrlElement);
     newDiv.appendChild(buttonElement);
-
-    const links = document.querySelector("#links");
-    links.prepend(newDiv)
-    console.log("#childnodes: " + links.childElementCount)
-    if (links.childElementCount > 3) {
-        const lastElement = links.lastElementChild;
-        links.removeChild(lastElement);
-    }
-    
-    feather.replace();
-    console.log('Appended new child div')
-})
+    return newDiv;
+}
 
 const h3Element = document.getElementById("shortened-urls");
 h3Element.style.display = "none";
