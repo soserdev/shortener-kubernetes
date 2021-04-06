@@ -221,9 +221,20 @@ h2.header__subtitle {
     min-height: 1.2rem;
     padding: 0.2rem;
     width: 10%;
+    outline: none;
 }
 
-.shorten-url-input:focus,.shorten-url-button:focus {
+.shorten-url-input:focus {
+    outline: none;
+}
+
+.shorten-url-button:hover {
+    background: linear-gradient(to right bottom, rgba(79, 170, 249, 0.3), rgba(255,255,255, 0.4));
+    outline: none;
+}
+
+.shorten-url-button:active {
+    background: linear-gradient(to right bottom, rgba(132, 170, 204, 0.4), rgba(255,255,255, 0.5));
     outline: none;
 }
 
