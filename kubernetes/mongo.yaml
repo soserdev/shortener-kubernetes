@@ -15,6 +15,15 @@ spec:
       containers:
       - name: mongodb
         image: mongo:3.6.5-jessie
+        volumeMounts:
+          - name: mongo-pv-storage
+            mountPath: /data/db              
+      volumes:
+        - name: mongo-pv-storage
+#          hostPath:
+#            path: /tmp/
+          persistentVolumeClaim:
+            claimName: mongo-pvc
 ---
 kind: Service
 apiVersion: v1
