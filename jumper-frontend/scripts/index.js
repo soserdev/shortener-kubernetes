@@ -2,7 +2,7 @@ const createShortUrl = async (originalUrl) => {
     const data = {
         url: originalUrl
     }
-    const response = await fetch('http://127.0.0.1:8081/shorturl', {
+    const response = await fetch('http://127.0.0.1:80/api/shorturl', {
         method: 'POST',
         // mode: 'cors', // cors, no-cors, *cors, same-origin);
         headers: {
@@ -28,7 +28,6 @@ document.querySelector('#shorten-form').addEventListener('submit', function(e) {
     createShortUrl(originalUrl).then((url) => {
         const linkDiv = createLinkDiv(originalUrl, url.shortUrl);
         const links = document.querySelector("#links");
-        console.log(links.childElementCount);
         if (links.childElementCount > 2) {
             const lastElement = links.lastElementChild;
             links.removeChild(lastElement);
