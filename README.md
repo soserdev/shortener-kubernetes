@@ -1,5 +1,21 @@
 # Jumper-Kubernetes
 
+## Create docker images
+
+Create the frontend image after `cd jumper-frontend`.
+
+```bash
+docker build -t somnidev/jumper-frontend:latest -t somnidev/jumper-frontend:0.1 -f Dockerfile .
+```
+
+Create the image for the api after `cd jumper-api`.
+
+```bash
+docker build -t somnidev/jumper-api:latest -t somnidev/jumper-api:0.1 -f Dockerfile .
+```
+
+## Create and get short url using api
+
 Create a short url.
 
 ```bash
@@ -85,3 +101,5 @@ urls
 ```bash
 kubectl exec --stdin --tty mongodb-5b4859859c-6l7kn -- /bin/bash
 ```
+
+##

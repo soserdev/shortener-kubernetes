@@ -22,3 +22,17 @@ spec:
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jumper-api
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app: jumper-api
+  type: ClusterIP
+  
