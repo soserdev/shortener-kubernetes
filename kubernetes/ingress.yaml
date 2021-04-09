@@ -17,10 +17,17 @@ spec:
             name: jumper-api
             port:
               number: 80
+      - path: /?([a-zA-Z0-9]{6})
+        pathType: Prefix
+        backend:
+          service:
+            name: jumper-api
+            port:
+              number: 80 
       - path: /?(.*)
         pathType: Prefix
         backend:
           service:
             name: jumper-frontend
             port:
-              number: 80   
+              number: 80

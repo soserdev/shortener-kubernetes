@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Date;
 
 @RestController()
@@ -14,6 +15,12 @@ public class JumperController {
 
     @Autowired
     private UrlService urlService;
+
+    @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
+    public ResponseEntity<Void> redirect(@PathVariable("shortUrl") String shortUrlPath){
+        var originalUrl = "http://heise.de";
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
+    }
 
     // curl localhost:8080
     @GetMapping("/shorturl/{shortUrl:[a-zA-Z0-9]{6}}")

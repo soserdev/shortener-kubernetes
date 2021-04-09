@@ -2,7 +2,10 @@ const createShortUrl = async (originalUrl) => {
     const data = {
         url: originalUrl
     }
-    const response = await fetch('http://jumper.io/api/shorturl', {
+    let apiUrl = 'http://jumper.io/api/shorturl';
+    // apiUrl = '/api/shorturl';
+    // apiUrl = 'http://localhost:8081/shorturl';
+    const response = await fetch(apiUrl, {
         method: 'POST',
         // mode: 'cors', // cors, no-cors, *cors, same-origin);
         headers: {
