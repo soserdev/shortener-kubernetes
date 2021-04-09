@@ -143,6 +143,17 @@ h2.header__subtitle {
     width:23%
 }
 
+a.link-short-url-a {
+    color: rgb(161, 173, 187);
+    text-decoration: none;
+}
+
+a.link-short-url-a:hover {
+    color: rgb(121, 150, 182);
+    text-decoration: none;
+}
+
+
 .link-copy-button {
     color: white;
     border: 0px solid rgba(255, 255, 255, 0.7);

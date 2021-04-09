@@ -2,7 +2,7 @@ const createShortUrl = async (originalUrl) => {
     const data = {
         url: originalUrl
     }
-    const response = await fetch('http://127.0.0.1:80/api/shorturl', {
+    const response = await fetch('http://jumper.io/api/shorturl', {
         method: 'POST',
         // mode: 'cors', // cors, no-cors, *cors, same-origin);
         headers: {
@@ -50,10 +50,17 @@ const createLinkDiv = (originalUrl, shortUrl) => {
     spanOriginalUrlElement.textContent = originalUrl;
     spanOriginalUrlElement.setAttribute("class", "link-original-url");
 
+    const anchorShortUrlElement = document.createElement("a");
+    const shortUrlLink = "jumper.io" + "/" + shortUrl;
+    anchorShortUrlElement.setAttribute("href", "http://" + shortUrlLink);
+    anchorShortUrlElement.setAttribute("class", "link-short-url-a");
+    anchorShortUrlElement.textContent = shortUrlLink;
+
     const spanShortUrlElement = document.createElement("span");
     spanShortUrlElement.setAttribute("class", "link-short-url");
     // const hostname = window.location.hostname;
-    spanShortUrlElement.textContent = "jumper.io" + "/" + shortUrl; //'jumbr.io/bG3eNf';
+    spanShortUrlElement.appendChild(anchorShortUrlElement);
+    // spanShortUrlElement.textContent = "jumper.io" + "/" + shortUrl; //'jumbr.io/bG3eNf';
 
     // const italicElement = document.createElement("i");
     // italicElement.setAttribute("data-feather", "copy")
