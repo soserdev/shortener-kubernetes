@@ -55,13 +55,13 @@ const createLinkDiv = (originalUrl, shortUrl) => {
     // const hostname = window.location.hostname;
     spanShortUrlElement.textContent = "jumper.io" + "/" + shortUrl; //'jumbr.io/bG3eNf';
 
-    const italicElement = document.createElement("i");
-    italicElement.setAttribute("data-feather", "copy")
-    italicElement.setAttribute("class", "feather-12rem")
+    // const italicElement = document.createElement("i");
+    // italicElement.setAttribute("data-feather", "copy")
+    // italicElement.setAttribute("class", "feather-12rem")
 
     const buttonElement = document.createElement("button");
     buttonElement.setAttribute("class", "link-copy-button");
-    buttonElement.appendChild(italicElement);
+    // buttonElement.appendChild(italicElement);
 
     const newDiv = document.createElement('div');
     newDiv.setAttribute('class', 'link');
