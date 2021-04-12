@@ -18,7 +18,7 @@ public class JumperController {
 
     @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<Void> redirect(@PathVariable("shortUrl") String shortUrlPath){
-        var originalUrl = "http://heise.de";
+        var originalUrl = urlService.getUrl(shortUrlPath);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
     }
 
