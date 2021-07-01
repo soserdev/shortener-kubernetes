@@ -9,13 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 @Configuration
 @ConfigurationProperties(prefix = "io.jumper.api.mongodb", ignoreUnknownFields = true)
 @Setter
 @Slf4j
-public class MongoConfig {
+public class MongoConfig extends AbstractMongoClientConfiguration {
 
     private String host;
     private String database;
@@ -34,6 +35,16 @@ public class MongoConfig {
     public MongoTemplate mongoTemplate() throws Exception {
         log.info("Using mongodb database: '" + database + "'");
         return new MongoTemplate(mongo(), database);
+    }
+
+    @Override
+    protected String getDatabaseName() {
+        return database;
+    }
+
+    @Override
+    protected boolean autoIndexCreation() {
+        return true;
     }
 }
 
