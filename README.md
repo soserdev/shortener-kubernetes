@@ -143,3 +143,65 @@ control check: No 'Access-Control-Allow-Origin' header is present on the request
 resource. If an opaque response serves your needs, set the request's mode to 
 'no-cors' to fetch the resource with CORS disabled.
 ```
+
+## Kubectl 
+
+```bash
+me@MBP-von-Simon kubernetes % kubectl get all          
+NAME                                 READY   STATUS    RESTARTS   AGE
+pod/jumper-api-5846cd4c6b-9dp9n      1/1     Running   0          19h
+pod/jumper-frontend-b784cd56-2z9d9   1/1     Running   0          24h
+pod/mongodb-5b4859859c-87kzk         1/1     Running   0          24h
+
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
+service/jumper-api        ClusterIP   10.103.168.172   <none>        80/TCP      19h
+service/jumper-frontend   ClusterIP   10.109.59.203    <none>        80/TCP      24h
+service/jumper-mongodb    ClusterIP   10.100.23.3      <none>        27017/TCP   24h
+service/kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP     26d
+
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/jumper-api        1/1     1            1           19h
+deployment.apps/jumper-frontend   1/1     1            1           24h
+deployment.apps/mongodb           1/1     1            1           24h
+
+NAME                                       DESIRED   CURRENT   READY   AGE
+replicaset.apps/jumper-api-5846cd4c6b      1         1         1       19h
+replicaset.apps/jumper-frontend-b784cd56   1         1         1       24h
+replicaset.apps/mongodb-5b4859859c         1         1         1       24h
+me@MBP-von-Simon kubernetes % kubectl exec --stdin --tty pod/mongodb-5b4859859c-87kzk -- /bin/bash
+root@mongodb-5b4859859c-87kzk:/# mongo
+MongoDB shell version v3.6.5
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.6.5
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+Server has startup warnings: 
+2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] 
+2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] 
+> show dbs
+admin   0.000GB
+config  0.000GB
+jumper  0.000GB
+local   0.000GB
+> use jumper
+switched to db jumper
+> show collections
+urls
+> db.urls.find()
+{ "_id" : ObjectId("60741959ee53f01f6ab0309d"), "shortUrl" : "YWMzMG", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.api.model.ShortUrl" }
+{ "_id" : ObjectId("60741adcee53f01f6ab0309e"), "shortUrl" : "ODRlY2", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.api.model.ShortUrl" }
+{ "_id" : ObjectId("60741c9eee53f01f6ab0309f"), "shortUrl" : "Nzc4ZT", "originalUrl" : "http://swr3.de", "_class" : "io.jumper.api.model.ShortUrl" }
+{ "_id" : ObjectId("607460287a23f35c285da9b8"), "shortUrl" : "ZTZjOT", "originalUrl" : "https://www.bbc.com/news/uk-56721559", "_class" : "io.jumper.api.model.ShortUrl" }
+> db.urls.drop()
+true
+> db show collections
+2021-04-13T14:22:18.804+0000 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:3
+> show collections
+> %                                                                           me@MBP-von-Simon kubernetes % ```
+
