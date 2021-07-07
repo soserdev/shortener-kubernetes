@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mongodb
-        image: mongo:3.6.5-jessie
+        image: mongo:4.4.6-bionic
         volumeMounts:
           - name: mongo-pv-storage
             mountPath: /data/db              

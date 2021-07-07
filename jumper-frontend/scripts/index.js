@@ -2,8 +2,8 @@ const createShortUrl = async (originalUrl) => {
     const data = {
         url: originalUrl
     }
-    let apiUrl = 'http://jumper.io/api/shorturl';
-    // apiUrl = '/api/shorturl';
+    // let apiUrl = 'http://jumper.io/api/shorturl';
+    let apiUrl = '/api/shorturl';
     // apiUrl = 'http://localhost:8081/shorturl';
     const response = await fetch(apiUrl, {
         method: 'POST',
@@ -14,7 +14,7 @@ const createShortUrl = async (originalUrl) => {
         body: JSON.stringify(data),
     })
     if (response.status !== 200) {
-        throw new Error('Unable to get message')
+        throw new Error('Unable to get message!')
     }
     const shortUrl = await response.json();
     return shortUrl;

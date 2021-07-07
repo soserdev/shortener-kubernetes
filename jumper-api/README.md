@@ -4,6 +4,7 @@ Start mongodb using docker.
 
 ```bash
 docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db mongo
+docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db mongo:4.4.6-bionic
 ```
 
 Build the docker image.
@@ -21,7 +22,7 @@ docker run --rm --name jumper-api -p 8080:8080 --link mongodb:mongodb somnidev/j
 Create a short url.
 
 ```bash
-curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' http://localhost:8080/
+curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' http://localhost:8080/shorturl
 ```
 
 And the result is.
@@ -48,10 +49,25 @@ And the result is.
 {"url":"http://www.google.com","shortUrl":"aHR0cD"}*
 ```
 
-Get the original url for the short url.
+Get the redirect for the short url.
 
 ```bash
-curl localhost:8080/aHR0cD
+% curl -v localhost:8081/MjQ0MD
+*   Trying ::1...
+* TCP_NODELAY set
+* Connected to localhost (::1) port 8081 (#0)
+> GET /MjQ0MD HTTP/1.1
+> Host: localhost:8081
+> User-Agent: curl/7.64.1
+> Accept: */*
+> 
+< HTTP/1.1 302 
+< Location: http://www.google.com
+< Content-Length: 0
+< Date: Wed, 07 Jul 2021 10:43:14 GMT
+< 
+* Connection #0 to host localhost left intact
+* Closing connection 0
 ```
 
 ## Ingress
