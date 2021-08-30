@@ -1,30 +1,156 @@
 # Jumper-Kubernetes
 
-## Create docker images
+Jumper is a simple url shortener. Url shorteners transform any long URL into a shorter, more readable url. When a user clicks the shortened version, they're automatically forwarded to the original url.
 
-Create the frontend image after `cd jumper-frontend`.
+This the Jumper-Kubernetes version based upon Kubernetes, Java, Spring Boot, Vanilla JavaScript, and MongoDB.
+
+## Installation Guide
+
+We assume that you have started _Docker Desktop_ on you machine.
+
+### Create docker images
+
+Change to directory `jumper-frontend`.
+
+```bash
+cd jumper-frontend
+```
+
+Create the docker image.
 
 ```bash
 docker build -t somnidev/jumper-frontend:latest -t somnidev/jumper-frontend:0.1 -f Dockerfile .
 ```
 
-Create the image for the api after `cd jumper-api`.
+Change the directory to `jumper-api`.
+
+```bash
+cd jumper-api
+```
+
+Create the docker image for the api.
 
 ```bash
 docker build -t somnidev/jumper-api:latest -t somnidev/jumper-api:0.1 -f Dockerfile .
 ```
 
-## Create and get short url using api
-
-Create a short url.
+There should be two docker images for jumper.
 
 ```bash
-% curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' http://localhost:8080/
+% docker image ls | grep jumper                                                                  
+somnidev/jumper-api                   0.1                                                     41889f012846   About a minute ago   196MB
+somnidev/jumper-api                   latest                                                  41889f012846   About a minute ago   196MB
+somnidev/jumper-frontend              0.1                                                     2ccbaf883b14   3 minutes ago        22.7MB
+somnidev/jumper-frontend              latest                                                  2ccbaf883b14   3 minutes ago        22.7MB
+```
+
+### Deploy to Kubernetes
+
+#### Start MongoDB
+
+Now we change to the `kubernetes` directory.
+
+```bash
+cd ../kubernetes
+```
+
+In order to start MongoDB we first have to create our _persistent volume_ and the corresponding _persistent volume claim_.
+
+```bash
+kubectl apply -f storage.yaml
+```
+
+There should be one _pvc_ configured and one corresponding _pv_.
+
+```bash
+% kubectl get pvc
+NAME        STATUS   VOLUME          CAPACITY   ACCESS MODES   STORAGECLASS     AGE
+mongo-pvc   Bound    local-storage   10Gi       RWO            mylocalstorage   2m32s
+
+% kubectl get pv 
+NAME            CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM               STORAGECLASS     REASON   AGE
+local-storage   10Gi       RWO            Retain           Bound    default/mongo-pvc   mylocalstorage            3m12s
+```
+
+Now we can start MongoDB itself.
+
+```bash
+kubectl apply -f mongo.yaml
+```
+
+#### Start the frontend and the API
+
+Now we start the frontend.
+
+```bash
+kubectl apply -f frontend
+```
+
+And the api.
+
+```bash
+kubectl apply -f api.yaml
+```
+
+#### Start the Ingress
+
+In order to access the frontend and the backend we we have to start the _ingress_.
+
+```bash
+kubectl apply -f ingress-deploy.yaml
+```
+
+And configure the _ingress_.
+
+```bash
+kubectl apply -f ingress.yaml
+```
+
+Everything should be running now.
+
+```bash
+% kubectl get all
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/jumper-api-5846cd4c6b-8bpjx   1/1     Running   0          3m33s
+pod/jumper-frontend-b784cd56-v6n4k   1/1     Running   0          1m22s
+pod/mongodb-5b4859859c-pxwfm      1/1     Running   0          7m
+
+NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
+service/jumper-api       ClusterIP   10.107.131.147   <none>        80/TCP      3m33s
+service/jumper-frontend   ClusterIP   10.110.55.249   <none>        80/TCP      1m22s
+service/jumper-mongodb   ClusterIP   10.97.105.251    <none>        27017/TCP   7m
+service/kubernetes       ClusterIP   10.96.0.1        <none>        443/TCP     7d
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/jumper-api   1/1     1            1           3m33s
+deployment.apps/jumper-frontend   1/1     1            1           1m22s
+deployment.apps/mongodb      1/1     1            1           7m
+
+NAME                                    DESIRED   CURRENT   READY   AGE
+replicaset.apps/jumper-api-5846cd4c6b   1         1         1       3m33s
+eplicaset.apps/jumper-frontend-b784cd56   1         1         1       1m22
+replicaset.apps/mongodb-5b4859859c      1         1         1       7m
+```
+
+## Now that everything is fine
+
+### Take a look at the frontend
+
+Now we can take a look at our app. In order to do this, open the browser and go to `http://localhost/` or if configured in your `/etc/hosts` file, just use `http://jumper.io` and create a shortened url.
+
+![jumper.io](jumper.png)
+
+### Create and get short url using the backend api
+
+It is also possible to create a short url using our backend API.
+
+```bash
+% % curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' http://localhost/api/shorturl
 *   Trying ::1...
 * TCP_NODELAY set
-* Connected to localhost (::1) port 8080 (#0)
-> POST / HTTP/1.1
-> Host: localhost:8080
+* Connected to localhost (::1) port 80 (#0)
+> POST /api/shorturl HTTP/1.1
+> Host: localhost
 > User-Agent: curl/7.64.1
 > Accept: */*
 > Content-Type: application/json
@@ -32,39 +158,79 @@ Create a short url.
 > 
 * upload completely sent off: 32 out of 32 bytes
 < HTTP/1.1 200 
+< Date: Fri, 10 Sep 2021 08:49:33 GMT
 < Content-Type: application/json
 < Transfer-Encoding: chunked
-< Date: Wed, 24 Mar 2021 17:57:50 GMT
+< Connection: keep-alive
+< Vary: Origin
+< Vary: Access-Control-Request-Method
+< Vary: Access-Control-Request-Headers
 < 
 * Connection #0 to host localhost left intact
-{"url":"http://www.google.com","shortUrl":"aHR0cD"}*
+{"url":"http://www.google.com","shortUrl":"OWI4OD"}* Closing connection 0
 ```
 
-Get the original url for the short url.
+In order to to get the original url for a specific short url we can use the following curl command.
 
 ```bash
-curl localhost:8080/aHR0cD
+% curl -v http://localhost/api/shorturl/OWI4OD
+*   Trying ::1...
+* TCP_NODELAY set
+* Connected to localhost (::1) port 80 (#0)
+> GET /api/shorturl/OWI4OD HTTP/1.1
+> Host: localhost
+> User-Agent: curl/7.64.1
+> Accept: */*
+> 
+< HTTP/1.1 200 
+< Date: Fri, 10 Sep 2021 08:50:56 GMT
+< Content-Type: application/json
+< Transfer-Encoding: chunked
+< Connection: keep-alive
+< 
+* Connection #0 to host localhost left intact
+{"url":"http://www.google.com","shortUrl":"OWI4OD"}* Closing connection 0
 ```
 
-Run the docker container.
+Invoking `localhost/OWI4OD` will result in a redirect to the original url.
 
 ```bash
- % docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db mongo
-b2db2808bd5ab242bdf78a6121b33813edaab090edeb2b19e657100983f926a7
+% curl -v http://localhost/OWI4OD             
+*   Trying ::1...
+* TCP_NODELAY set
+* Connected to localhost (::1) port 80 (#0)
+> GET /OWI4OD HTTP/1.1
+> Host: localhost
+> User-Agent: curl/7.64.1
+> Accept: */*
+> 
+< HTTP/1.1 302 
+< Date: Fri, 10 Sep 2021 11:49:35 GMT
+< Content-Length: 0
+< Connection: keep-alive
+< Location: http://www.google.com
+< 
+* Connection #0 to host localhost left intact
+* Closing connection 0
 ```
 
-Connect to mongo.
+### Container shell access and viewing MongoDB database
+
+The `kubectl exec` command allows you to run commands inside a the pods container. The following command line will give you a bash shell inside your mongo container.
 
 ```bash
-% mongo
-MongoDB shell version v4.4.3
+kubectl exec --stdin --tty mongodb-5b4859859c-6l7kn -- /bin/bash
+```
+
+Now we can connect to our MongoDB using the `mongo` command.
+
+```bash
+
+I have no name!@mongodb-97c9d6684-h258m:/$ mongo
+MongoDB shell version v4.4.8
 connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
-Implicit session: session { "id" : UUID("9ae8372c-ada9-4e51-8289-f28d983c881d") }
-MongoDB server version: 4.4.4
----
-The server generated these startup warnings when booting: 
-        2021-04-06T10:30:15.251+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
----
+Implicit session: session { "id" : UUID("17551972-8629-4931-a515-97fb91ead8cc") }
+MongoDB server version: 4.4.8
 ---
         Enable MongoDB's free cloud-based monitoring service, which will then receive and display
         metrics about your deployment (disk utilization, CPU, operation statistics, etc).
@@ -76,101 +242,13 @@ The server generated these startup warnings when booting:
         To enable free monitoring, run the following command: db.enableFreeMonitoring()
         To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
 ---
+> 
 ```
 
-Show databases, collections, and find documents.
+Now we can list all databases using the `show dbs` command.
 
 ```bash
-> show dbs
-admin   0.000GB
-config  0.000GB
-jumper  0.000GB
-local   0.000GB
-test    0.000GB
-> use jumper
-switched to db jumper
-> show collections
-urls
-> db.urls.find()
-{ "_id" : ObjectId("605cb7e386b0962bc9cc55dd"), "shortUrl" : "YjkyNz", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.backend.model.ShortUrl" }
-{ "_id" : ObjectId("605cb81086b0962bc9cc55de"), "shortUrl" : "MGY2Mj", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.backend.model.ShortUrl" }
-```
 
-## Kubernetetes exec into pod
-
-```bash
-kubectl exec --stdin --tty mongodb-5b4859859c-6l7kn -- /bin/bash
-```
-
-## Ingress rules
-
-Ingress has the ability to rewrite the target uri - see the [Official Documentation](https://kubernetes.github.io/ingress-nginx/examples/rewrite/#rewrite-target). In order to activate this annotation add `nginx.ingress.kubernetes.io/rewrite-target` and the rule.
-
-The following example shows how to create an Ingress rule with a rewrite annotation - see the official documentation.
-
-```yaml
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-  name: rewrite
-  namespace: default
-spec:
-  rules:
-  - host: rewrite.bar.com
-    http:
-      paths:
-      - backend:
-          serviceName: http-svc
-          servicePort: 80
-        path: /something(/|$)(.*)
-```
-
-The ingress definition above will result in the following rewrites.
-
-- `rewrite.bar.com/something` rewrites to `rewrite.bar.com/`
-- `rewrite.bar.com/something/` rewrites to `rewrite.bar.com/`
-- `rewrite.bar.com/something/new` rewrites to `rewrite.bar.com/new`
-
-```bash
-me@MBP-von-Simon kubernetes % kubectl get all          
-NAME                                 READY   STATUS    RESTARTS   AGE
-pod/jumper-api-5846cd4c6b-9dp9n      1/1     Running   0          19h
-pod/jumper-frontend-b784cd56-2z9d9   1/1     Running   0          24h
-pod/mongodb-5b4859859c-87kzk         1/1     Running   0          24h
-
-NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)     AGE
-service/jumper-api        ClusterIP   10.103.168.172   <none>        80/TCP      19h
-service/jumper-frontend   ClusterIP   10.109.59.203    <none>        80/TCP      24h
-service/jumper-mongodb    ClusterIP   10.100.23.3      <none>        27017/TCP   24h
-service/kubernetes        ClusterIP   10.96.0.1        <none>        443/TCP     26d
-
-NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/jumper-api        1/1     1            1           19h
-deployment.apps/jumper-frontend   1/1     1            1           24h
-deployment.apps/mongodb           1/1     1            1           24h
-
-NAME                                       DESIRED   CURRENT   READY   AGE
-replicaset.apps/jumper-api-5846cd4c6b      1         1         1       19h
-replicaset.apps/jumper-frontend-b784cd56   1         1         1       24h
-replicaset.apps/mongodb-5b4859859c         1         1         1       24h
-me@MBP-von-Simon kubernetes % kubectl exec --stdin --tty pod/mongodb-5b4859859c-87kzk -- /bin/bash
-root@mongodb-5b4859859c-87kzk:/# mongo
-MongoDB shell version v3.6.5
-connecting to: mongodb://127.0.0.1:27017
-MongoDB server version: 3.6.5
-Welcome to the MongoDB shell.
-For interactive help, type "help".
-For more comprehensive documentation, see
-	http://docs.mongodb.org/
-Questions? Try the support group
-	http://groups.google.com/group/mongodb-user
-Server has startup warnings: 
-2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] 
-2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
-2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
-2021-04-12T09:43:43.484+0000 I CONTROL  [initandlisten] 
 > show dbs
 admin   0.000GB
 config  0.000GB
@@ -181,13 +259,6 @@ switched to db jumper
 > show collections
 urls
 > db.urls.find()
-{ "_id" : ObjectId("60741959ee53f01f6ab0309d"), "shortUrl" : "YWMzMG", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.api.model.ShortUrl" }
-{ "_id" : ObjectId("60741adcee53f01f6ab0309e"), "shortUrl" : "ODRlY2", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.api.model.ShortUrl" }
-{ "_id" : ObjectId("60741c9eee53f01f6ab0309f"), "shortUrl" : "Nzc4ZT", "originalUrl" : "http://swr3.de", "_class" : "io.jumper.api.model.ShortUrl" }
-{ "_id" : ObjectId("607460287a23f35c285da9b8"), "shortUrl" : "ZTZjOT", "originalUrl" : "https://www.bbc.com/news/uk-56721559", "_class" : "io.jumper.api.model.ShortUrl" }
-> db.urls.drop()
-true
-> db show collections
-2021-04-13T14:22:18.804+0000 E QUERY    [thread1] SyntaxError: missing ; before statement @(shell):1:3
-> show collections
-> %                                                                           me@MBP-von-Simon kubernetes % ```
+{ "_id" : ObjectId("6130c0de8a684423d8e4116d"), "shortUrl" : "YjA4Mj", "originalUrl" : "http://www.apple.com", "_class" : "io.jumper.api.model.ShortUrl" }
+{ "_id" : ObjectId("613b1c1d65a8be7b8b2a22c7"), "shortUrl" : "OWI4OD", "originalUrl" : "http://www.google.com", "_class" : "io.jumper.api.model.ShortUrl" }
+```
