@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+
 @Configuration
 @ConfigurationProperties(prefix = "io.jumper.api.mongodb", ignoreUnknownFields = true)
 @Setter
@@ -23,13 +24,14 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Bean
     public MongoClient mongo() {
-        log.info("Connecting to mongodb: '" + host + "'...");
+        log.info("Connecting to mongodb: '" + host + "' and database '" + database + "'...");
         ConnectionString connectionString = new ConnectionString(host);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
                 .build();
         return MongoClients.create(mongoClientSettings);
     }
+
 
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {

@@ -2,6 +2,7 @@ package io.jumper.api.controller;
 
 import io.jumper.api.dto.UrlDto;
 import io.jumper.api.service.UrlService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.net.URI;
 import java.util.Date;
 
 @RestController()
+@Slf4j
 public class JumperController {
 
     @Autowired
@@ -18,7 +20,9 @@ public class JumperController {
 
     @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<Void> redirect(@PathVariable("shortUrl") String shortUrlPath){
+        log.info("JumperController 'GET /shortUrl/???... with path " + shortUrlPath);
         var originalUrl = urlService.getUrl(shortUrlPath);
+        log.info("JumperController 'GET /shortUrl/'" + shortUrlPath + "' -> originalPath: " + originalUrl);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
     }
 
@@ -26,6 +30,7 @@ public class JumperController {
     @GetMapping("/shorturl/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<UrlDto> get(@PathVariable("shortUrl") String shortUrlPath) {
         var originalUrl = urlService.getUrl(shortUrlPath);
+        log.info("JumperController 'GET /shortUrl/'" + originalUrl + "'...");
         var urlDto = UrlDto.builder()
                 .shortUrl(shortUrlPath)
                 .url(originalUrl)
@@ -38,6 +43,8 @@ public class JumperController {
     @PostMapping("/shorturl")
     public ResponseEntity<UrlDto> add(@RequestBody UrlDto urlDto) {
         var originalUrl = urlDto.getUrl();
+        log.info("JumperController 'POST originalUrl: '" + originalUrl + "'...");
+
         var savedUrl = urlService.createUrl(originalUrl);
 
         var body = UrlDto.builder()
@@ -49,6 +56,7 @@ public class JumperController {
 
     @GetMapping("/ping")
     public String ping() {
+        log.info("Endpoint /ping");
         return "Hello Ping";
     }
 
