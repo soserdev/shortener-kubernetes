@@ -2,9 +2,7 @@ const createShortUrl = async (originalUrl) => {
     const data = {
         url: originalUrl
     }
-    let apiUrl = 'http://jumper.io/api/shorturl';
-    // apiUrl = '/api/shorturl';
-    // apiUrl = 'http://localhost:8081/shorturl';
+    let apiUrl = '/api/shorturl';
     const response = await fetch(apiUrl, {
         method: 'POST',
         // mode: 'cors', // cors, no-cors, *cors, same-origin);
@@ -14,7 +12,7 @@ const createShortUrl = async (originalUrl) => {
         body: JSON.stringify(data),
     })
     if (response.status !== 200) {
-        throw new Error('Unable to get message')
+        throw new Error('Unable to get message!')
     }
     const shortUrl = await response.json();
     return shortUrl;
@@ -61,17 +59,10 @@ const createLinkDiv = (originalUrl, shortUrl) => {
 
     const spanShortUrlElement = document.createElement("span");
     spanShortUrlElement.setAttribute("class", "link-short-url");
-    // const hostname = window.location.hostname;
     spanShortUrlElement.appendChild(anchorShortUrlElement);
-    // spanShortUrlElement.textContent = "jumper.io" + "/" + shortUrl; //'jumbr.io/bG3eNf';
-
-    // const italicElement = document.createElement("i");
-    // italicElement.setAttribute("data-feather", "copy")
-    // italicElement.setAttribute("class", "feather-12rem")
 
     const buttonElement = document.createElement("button");
     buttonElement.setAttribute("class", "link-copy-button");
-    // buttonElement.appendChild(italicElement);
 
     const newDiv = document.createElement('div');
     newDiv.setAttribute('class', 'link');

@@ -23,20 +23,9 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     private String database;
 
     @Bean
-    public MongoClient mongo() {
-        log.info("Connecting to mongodb: '" + host + "' and database '" + database + "'...");
-        ConnectionString connectionString = new ConnectionString(host);
-        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-                .applyConnectionString(connectionString)
-                .build();
-        return MongoClients.create(mongoClientSettings);
-    }
-
-
-    @Bean
-    public MongoTemplate mongoTemplate() throws Exception {
-        log.info("Using mongodb database: '" + database + "'");
-        return new MongoTemplate(mongo(), database);
+    @Override
+    public MongoClient mongoClient() {
+        return super.mongoClient();
     }
 
     @Override
@@ -47,6 +36,13 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     @Override
     protected boolean autoIndexCreation() {
         return true;
+    }
+
+    @Override
+    protected void configureClientSettings(MongoClientSettings.Builder builder) {
+        log.info("Connecting to mongodb: '" + host + "'");
+        ConnectionString connectionString = new ConnectionString(host);
+        builder.applyConnectionString(connectionString);
     }
 }
 

@@ -248,7 +248,6 @@ MongoDB server version: 4.4.8
 Now we can list all databases using the `show dbs` command.
 
 ```bash
-
 > show dbs
 admin   0.000GB
 config  0.000GB
