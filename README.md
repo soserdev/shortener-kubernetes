@@ -106,6 +106,12 @@ And configure the _ingress_.
 kubectl apply -f ingress.yaml
 ```
 
+Check if the ingress is running.
+
+```bash
+kubectl get pods -n ingress-nginx
+```
+
 Everything should be running now.
 
 ```bash
