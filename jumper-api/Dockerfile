@@ -1,12 +1,15 @@
 # jumper-api % docker build -t somnidev/jumper-api:latest -t somnidev/jumper-api:0.1 -f Dockerfile .
-FROM maven:3.8.1-jdk-11-slim AS build
-RUN mkdir /project
-COPY . /project
-WORKDIR /project
-RUN mvn clean package -DskipTests
+FROM openjdk:11-jre-slim as builder
+WORKDIR application
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} application.jar
+RUN java -Djarmode=layertools -jar application.jar extract
 
-FROM openjdk:11.0.11-9-jre-slim
-RUN mkdir /app
-COPY --from=build /project/target/jumper-api-0.0.1-SNAPSHOT.jar /app/java-application.jar
-WORKDIR /app
-CMD "java" "-jar" "java-application.jar"
+FROM openjdk:11-jre-slim
+EXPOSE 8080
+WORKDIR application
+COPY --from=builder application/dependencies/ ./
+COPY --from=builder application/spring-boot-loader/ ./
+COPY --from=builder application/snapshot-dependencies/ ./
+COPY --from=builder application/application/ ./
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "org.springframework.boot.loader.JarLauncher"]

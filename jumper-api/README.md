@@ -1,6 +1,6 @@
 # Jumper-Api
 
-Start mongodb using docker.
+Start mongodb using docker to pass the tests, e.g. when running `mvn clean package`.
 
 ```bash
 docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db mongo:4.4.6-bionic
