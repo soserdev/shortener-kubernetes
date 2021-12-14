@@ -4,6 +4,8 @@ Jumper is a simple url shortener. Url shorteners transform any long URL into a s
 
 This the Jumper-Kubernetes version based upon Kubernetes, Java, Spring Boot, Vanilla JavaScript, and MongoDB.
 
+> Note: Jumper is a small app to test microservices and Kubernetes! It is not meant to be perfect!
+
 ## Installation Guide
 
 We assume that you have started _Docker Desktop_ on you machine.
