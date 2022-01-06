@@ -5,6 +5,7 @@ Start mongodb using docker to pass the tests, e.g. when running `mvn clean packa
 ```bash
 docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db bitnami/mongodb:4.4.8
 ```
+
 Build the docker image.
 
 ```bash
