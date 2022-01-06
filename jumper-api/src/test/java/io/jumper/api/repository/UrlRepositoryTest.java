@@ -17,7 +17,7 @@ class UrlRepositoryTest {
     void findByShortUrl() {
         var url = new ShortUrl();
         var shortUrl = "abc123";
-        url.setOriginalUrl("https//www.swr3.de");
+        url.setOriginalUrl("https//www.google.com");
         url.setShortUrl(shortUrl);
         var savedUrl = urlRepository.save(url);
         System.out.println(savedUrl.getId());

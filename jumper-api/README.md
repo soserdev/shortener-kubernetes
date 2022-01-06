@@ -3,9 +3,8 @@
 Start mongodb using docker to pass the tests, e.g. when running `mvn clean package`.
 
 ```bash
-docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db mongo:4.4.6-bionic
+docker run -d --name mongodb -p 27017:27017 -v  ~/tmp/mongodb/data:/data/db bitnami/mongodb:4.4.8
 ```
-
 Build the docker image.
 
 ```bash
@@ -27,7 +26,7 @@ curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' 
 And the result is.
 
 ```bash
-% curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' http://localhost:8080/
+% curl -v -H'Content-Type: application/json' -d'{"url": "http://www.google.com"}' http://localhost:8080/shorturl
 *   Trying ::1...
 * TCP_NODELAY set
 * Connected to localhost (::1) port 8080 (#0)
@@ -51,7 +50,7 @@ And the result is.
 Get the redirect for the short url.
 
 ```bash
-% curl -v localhost:8081/MjQ0MD
+% curl -v localhost:8080/shorturl/MjQ0MD
 *   Trying ::1...
 * TCP_NODELAY set
 * Connected to localhost (::1) port 8081 (#0)
