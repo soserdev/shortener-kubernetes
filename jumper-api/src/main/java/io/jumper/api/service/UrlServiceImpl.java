@@ -24,7 +24,7 @@ public class UrlServiceImpl implements UrlService {
         var url = createShortUrl(originalUrl);
         var found = urlRepository.findByShortUrl(url.getShortUrl());
         if (found != null) {
-            throw new SomethingWentWrongException("Something went wrong while saving short url!");
+            throw new SomethingWentWrongException("Short url is not unique!");
         }
         var savedUrl = urlRepository.save(url);
         return savedUrl.getShortUrl();

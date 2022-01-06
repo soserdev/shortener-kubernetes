@@ -16,10 +16,10 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ResponseBody
     @ExceptionHandler(SomethingWentWrongException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public final ResponseEntity<ApiError> resourceAlreadyExistsHandler(SomethingWentWrongException exception, WebRequest request) {
         final ApiError exceptionResponse = new ApiError(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.name(), exception.getMessage());
-        return new ResponseEntity<ApiError>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<ApiError>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ Exception.class })
