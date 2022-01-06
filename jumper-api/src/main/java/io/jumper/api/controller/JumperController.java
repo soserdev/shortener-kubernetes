@@ -29,7 +29,7 @@ public class JumperController {
     @GetMapping("/shorturl/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<UrlDto> get(@PathVariable("shortUrl") String shortUrlPath) {
         var originalUrl = urlService.getUrl(shortUrlPath);
-        log.info("JumperController 'GET /shortUrl/'" + originalUrl + "'...");
+        log.info("JumperController: GET " + shortUrlPath + " -> " + originalUrl);
         var urlDto = UrlDto.builder()
                 .shortUrl(shortUrlPath)
                 .url(originalUrl)
@@ -42,9 +42,8 @@ public class JumperController {
     @PostMapping("/shorturl")
     public ResponseEntity<UrlDto> add(@RequestBody UrlDto urlDto) {
         var originalUrl = urlDto.getUrl();
-        log.info("JumperController 'POST originalUrl: '" + originalUrl + "'...");
-
         var savedUrl = urlService.createUrl(originalUrl);
+        log.info("JumperController: POST " + originalUrl + " -> " + savedUrl);
 
         var body = UrlDto.builder()
                 .shortUrl(savedUrl)
