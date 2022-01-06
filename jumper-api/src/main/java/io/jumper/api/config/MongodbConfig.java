@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 @ConfigurationProperties(prefix = "io.jumper.api.mongodb", ignoreUnknownFields = true)
 @Setter
 @Slf4j
-public class MongoConfig extends AbstractMongoClientConfiguration {
+public class MongodbConfig extends AbstractMongoClientConfiguration {
 
     private String host;
     private String database;
