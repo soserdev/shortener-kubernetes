@@ -14,12 +14,16 @@ import java.net.URI;
 @Slf4j
 public class JumperController {
 
+    private final UrlService urlService;
+
     @Autowired
-    private UrlService urlService;
+    public JumperController(UrlService urlService) {
+        this.urlService = urlService;
+    }
 
     @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<Void> redirect(@PathVariable("shortUrl") String shortUrlPath){
-        log.info("JumperController 'GET /shortUrl/???... with path " + shortUrlPath);
+        log.info("JumperController 'GET /shortUrl/" + shortUrlPath);
         var originalUrl = urlService.getUrl(shortUrlPath);
         log.info("JumperController 'GET /shortUrl/'" + shortUrlPath + "' -> originalPath: " + originalUrl);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
@@ -34,7 +38,7 @@ public class JumperController {
                 .shortUrl(shortUrlPath)
                 .url(originalUrl)
                 .build();
-        return new ResponseEntity<UrlDto>(urlDto, HttpStatus.OK);
+        return new ResponseEntity<>(urlDto, HttpStatus.OK);
     }
 
     // curl -v -H'Content-Type: application/json' -d'{"url": "http://www.swr3.de"}' http://localhost:8080/
@@ -49,7 +53,7 @@ public class JumperController {
                 .shortUrl(savedUrl)
                 .url(originalUrl)
                 .build();
-        return new ResponseEntity<UrlDto>(body, HttpStatus.OK);
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @GetMapping("/ping")
