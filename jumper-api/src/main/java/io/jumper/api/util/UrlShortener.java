@@ -21,9 +21,4 @@ public class UrlShortener {
         return digest.substring(0,6);
     }
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        var url = "https://www.heise.de";
-        System.out.printf("Url: '%s' \t Shorturl: '%s'%n", url, create(url));
-        System.out.printf("Url: '%s' \t Shorturl: '%s'%n", url, create(url));
-    }
 }

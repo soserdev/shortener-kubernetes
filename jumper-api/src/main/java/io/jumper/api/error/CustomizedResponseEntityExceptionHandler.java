@@ -16,15 +16,15 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ResponseBody
     @ExceptionHandler(SomethingWentWrongException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public final ResponseEntity<ApiError> resourceAlreadyExistsHandler(SomethingWentWrongException exception, WebRequest request) {
         final ApiError exceptionResponse = new ApiError(String.valueOf(HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST.name(), exception.getMessage());
-        return new ResponseEntity<ApiError>(exceptionResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
         ApiError apiError = new ApiError(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()), ex.getLocalizedMessage(), "Internal server error occurred");
-        return new ResponseEntity<Object>(apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiError, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
