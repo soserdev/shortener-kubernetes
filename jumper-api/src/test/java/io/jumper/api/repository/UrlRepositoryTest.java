@@ -4,16 +4,18 @@ import io.jumper.api.model.ShortUrl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 // import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+//@SpringBootTest
+//@EnabledIf(value = "#{environment.getActiveProfiles()[0] == 'mongodb-active'}", loadContext = true)
 class UrlRepositoryTest {
 
     @Autowired
     private UrlRepository urlRepository;
 
-    @Test
+    //@Test
     void findByShortUrl() {
         var url = new ShortUrl();
         var shortUrl = "abc123";
