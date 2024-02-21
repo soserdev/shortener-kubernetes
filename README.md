@@ -96,7 +96,9 @@ kubectl apply -f api.yaml
 
 #### Start the Ingress
 
-In order to access the frontend and the backend we we have to start the _ingress_.
+Assuming you have Docker for Mac installed, follow the next steps to set up the _Nginx Ingress Controller_ on your local Kubernetes cluster - and take a look at the [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/#docker-for-mac) for the actual link.
+
+In order to access the frontend and the backend we have to start the _ingress_.
 
 ```bash
 kubectl apply -f ingress-deploy.yaml
@@ -111,7 +113,18 @@ kubectl apply -f ingress.yaml
 Check if the ingress is running.
 
 ```bash
-kubectl get pods -n ingress-nginx
+% kubectl get pods --namespace=ingress-nginx
+NAME                                        READY   STATUS      RESTARTS   AGE
+ingress-nginx-admission-create-knbvf        0/1     Completed   0          57s
+ingress-nginx-admission-patch-c2kgp         0/1     Completed   1          57s
+ingress-nginx-controller-74469fd44c-vbb4r   1/1     Running     0          57s
+```
+
+If the ingress doesn't start properly, you can take a look at the [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/#docker-for-mac) for the [actual deployment file](https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml) and apply that one.
+
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
 ```
 
 Everything should be running now.
