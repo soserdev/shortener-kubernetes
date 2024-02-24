@@ -1,6 +1,5 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -29,11 +28,7 @@ dist/
 nbdist/
 .nb-gradle/
 
-### Spring Boot mvn ###
-.mvn
-
 ### Java ###
-*.jar
 *.class
 *.mods
 jars/
