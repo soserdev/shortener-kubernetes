@@ -7,6 +7,8 @@ import io.jumper.api.util.UrlShortener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UrlServiceImpl implements UrlService {
 
@@ -18,20 +20,23 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public String getUrl(String shortUrl) {
+    public Optional<String> getUrl(String shortUrl) {
         var url = urlRepository.findByShortUrl(shortUrl);
-        return url.getOriginalUrl();
+        if (url == null) {
+            return Optional.empty();
+        }
+        return Optional.of(url.getOriginalUrl());
     }
 
     @Override
-    public String createUrl(String originalUrl) {
+    public Optional<String> createUrl(String originalUrl) {
         var url = createShortUrl(originalUrl);
         var found = urlRepository.findByShortUrl(url.getShortUrl());
         if (found != null) {
             throw new SomethingWentWrongException("Short url is not unique!");
         }
         var savedUrl = urlRepository.save(url);
-        return savedUrl.getShortUrl();
+        return Optional.of(savedUrl.getShortUrl());
     }
 
     private ShortUrl createShortUrl(String originalUrl) {

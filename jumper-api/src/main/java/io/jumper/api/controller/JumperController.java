@@ -1,6 +1,7 @@
 package io.jumper.api.controller;
 
 import io.jumper.api.dto.UrlDto;
+import io.jumper.api.exception.SomethingWentWrongException;
 import io.jumper.api.service.UrlService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,33 +25,43 @@ public class JumperController {
     @GetMapping("/{shortUrl:[a-zA-Z0-9]{6}}")
     public ResponseEntity<Void> redirect(@PathVariable("shortUrl") String shortUrlPath){
         log.info("JumperController 'GET /shortUrl/" + shortUrlPath);
+
         var originalUrl = urlService.getUrl(shortUrlPath);
+        if (originalUrl.isEmpty()) {
+            log.info("NOT Found: " + shortUrlPath);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         log.info("JumperController 'GET /shortUrl/'" + shortUrlPath + "' -> originalPath: " + originalUrl);
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl)).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(originalUrl.get())).build();
     }
 
-    // curl localhost:8080
     @GetMapping("/shorturl/{shortUrl:[a-zA-Z0-9]{6}}")
-    public ResponseEntity<UrlDto> get(@PathVariable("shortUrl") String shortUrlPath) {
+    public ResponseEntity<UrlDto> getOriginalUrl(@PathVariable("shortUrl") String shortUrlPath) {
         var originalUrl = urlService.getUrl(shortUrlPath);
-        log.info("JumperController: GET " + shortUrlPath + " -> " + originalUrl);
+        if (originalUrl.isEmpty()) {
+            log.info("NOT Found: " + shortUrlPath);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         var urlDto = UrlDto.builder()
+                .url(originalUrl.get())
                 .shortUrl(shortUrlPath)
-                .url(originalUrl)
                 .build();
+        log.info("JumperController: GET " + shortUrlPath + " -> " + originalUrl.get());
         return new ResponseEntity<>(urlDto, HttpStatus.OK);
     }
 
-    // curl -v -H'Content-Type: application/json' -d'{"url": "http://www.swr3.de"}' http://localhost:8080/
     @CrossOrigin
     @PostMapping("/shorturl")
-    public ResponseEntity<UrlDto> add(@RequestBody UrlDto urlDto) {
+    public ResponseEntity<UrlDto> create(@RequestBody UrlDto urlDto) {
         var originalUrl = urlDto.getUrl();
         var savedUrl = urlService.createUrl(originalUrl);
-        log.info("JumperController: POST " + originalUrl + " -> " + savedUrl);
+        if (savedUrl.isEmpty()) {
+            throw new SomethingWentWrongException("Url not created");
+        }
+        log.info("JumperController: POST " + originalUrl + " -> " + savedUrl.get());
 
         var body = UrlDto.builder()
-                .shortUrl(savedUrl)
+                .shortUrl(savedUrl.get())
                 .url(originalUrl)
                 .build();
         return new ResponseEntity<>(body, HttpStatus.OK);

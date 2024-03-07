@@ -1,8 +1,10 @@
 package io.jumper.api.service;
 
+import java.util.Optional;
+
 public interface UrlService {
 
-    String getUrl(final String shortUrl);
-    String createUrl(final String url);
+    Optional<String> getUrl(final String shortUrl);
+    Optional<String> createUrl(final String url);
 
 }
