@@ -1,7 +1,7 @@
 package io.jumper.api.service;
 
 import io.jumper.api.exception.SomethingWentWrongException;
-import io.jumper.api.model.ShortUrl;
+import io.jumper.api.model.Url;
 import io.jumper.api.repository.UrlRepository;
 import io.jumper.api.util.UrlShortener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ public class UrlServiceImpl implements UrlService {
     }
 
     @Override
-    public Optional<String> getUrl(String shortUrl) {
+    public Optional<Url> getUrl(String shortUrl) {
         var url = urlRepository.findByShortUrl(shortUrl);
         if (url == null) {
             return Optional.empty();
         }
-        return Optional.of(url.getOriginalUrl());
+        return Optional.of(url);
     }
 
     @Override
@@ -39,9 +39,9 @@ public class UrlServiceImpl implements UrlService {
         return Optional.of(savedUrl.getShortUrl());
     }
 
-    private ShortUrl createShortUrl(String originalUrl) {
+    private Url createShortUrl(String originalUrl) {
         var shortUrl = UrlShortener.create(originalUrl);
-        var url = new ShortUrl();
+        var url = new Url();
         url.setOriginalUrl(originalUrl);
         url.setShortUrl(shortUrl);
         return url;

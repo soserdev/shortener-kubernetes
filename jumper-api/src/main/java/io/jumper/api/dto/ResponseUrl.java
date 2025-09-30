@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UrlDto {
+public class ResponseUrl {
+
+    private String id;
 
     // @NotNull
     // @Size(min=7, max=128)

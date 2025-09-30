@@ -1,5 +1,7 @@
 package io.jumper.api.controller;
 
+import io.jumper.api.dto.ResponseUrl;
+import io.jumper.api.model.Url;
 import io.jumper.api.service.UrlService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +39,12 @@ class JumperControllerTest {
 
     @Test
     void redirect() throws Exception {
+        var id = "012345H";
         var shortUrl = "abc123";
         var originalUrl = "http://google.com";
-        given(urlService.getUrl(any())).willReturn(Optional.of(originalUrl));
+        Url url = new Url(id, shortUrl, originalUrl);
+        // given(urlService.getUrl(any())).willReturn(Optional.of(originalUrl));
+        given(urlService.getUrl(any())).willReturn(Optional.of(url));
         mockMvc.perform(get("/" + shortUrl))
                 .andExpect(status().isFound())
                 .andExpect(header().exists(LOCATION))
@@ -48,9 +53,14 @@ class JumperControllerTest {
 
     @Test
     void getOriginalUrl() throws Exception {
+        var id = "012345H";
         var shortUrl = "abc123";
         var originalUrl = "http://google.com";
-        given(urlService.getUrl(any())).willReturn(Optional.of(originalUrl));
+        Url url = new Url(id, shortUrl, originalUrl);
+
+        // iven(urlService.getUrl(any())).willReturn(Optional.of(originalUrl));
+        given(urlService.getUrl(any())).willReturn(Optional.of(url));
+
         mockMvc.perform(get("/shorturl/" + shortUrl))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

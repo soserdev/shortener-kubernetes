@@ -1,10 +1,7 @@
 package io.jumper.api.repository;
 
-import io.jumper.api.model.ShortUrl;
-import org.junit.jupiter.api.Test;
+import io.jumper.api.model.Url;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 // import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,7 +14,7 @@ class UrlRepositoryTest {
 
     //@Test
     void findByShortUrl() {
-        var url = new ShortUrl();
+        var url = new Url();
         var shortUrl = "abc123";
         url.setOriginalUrl("https//www.google.com");
         url.setShortUrl(shortUrl);

@@ -1,12 +1,12 @@
 package io.jumper.api.repository;
 
-import io.jumper.api.model.ShortUrl;
+import io.jumper.api.model.Url;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UrlRepository extends MongoRepository<ShortUrl, String> {
+public interface UrlRepository extends MongoRepository<Url, String> {
 
-    ShortUrl findByShortUrl(String shortUrlPath);
+    Url findByShortUrl(String shortUrlPath);
 
 }
