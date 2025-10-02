@@ -2,30 +2,38 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nginx-ingress
+  namespace: default
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/use-regex: 'true'
+    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
+  ingressClassName: nginx  # This replaces the deprecated annotation
   rules:
   - http:
       paths:
       - path: /api/(.*)
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: jumper-api
             port:
               number: 80
       - path: /([a-zA-Z0-9]{6}$)
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: jumper-api
             port:
               number: 80 
-      - path: /(.*)
-        pathType: Prefix
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: jumper-frontend
+            port:
+              number: 80
+      - path: /(.+)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: jumper-frontend
